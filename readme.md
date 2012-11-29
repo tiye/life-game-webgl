@@ -18,5 +18,4 @@ There might be something wrong with my rules. The actions looks strange.
 ## in Chinese
 
 学着 WebGL 的粒子系统写了一遍, 运行起来速度不太理想, 比 2d canvas 是好一些  
-看了下结果, 我的 Demo 结局是满屏的, 而另一个 Demo 却不是, 我可能错了  
-按上边说的, 自己写的原因是看不懂面向对象的写法, 性能还不知道怎么样的  
+按上边说的, 自己写的原因是看不懂面向对象的写法, 性能似乎要比 OOP 的版本差  

@@ -1,63 +1,39 @@
 
-coin = ->
-  a = Math.random()
-  a > 0.7
+coin = -> Math.random() > 0.85
+p = (x, y) -> "#{x}&#{y}"
 
 world = {}
 
-camera = {}
-scene = {}
-renderer = {}
-particles = []
-mouseX = 0
-mouseY = 0
-
-p = (x, y) -> "#{x}&#{y}"
 w = 50
 h = 50
+
 window.onload = ->
 
-  init = ->
-    camera = new THREE.PerspectiveCamera 80, window.innerWidth/window.innerHeight, 1, 4000
-    camera.position.z = 1000
-    scene = new THREE.Scene()
-    scene.add camera
+  camera = new THREE.PerspectiveCamera 80, window.innerWidth/window.innerHeight, 1, 4000
+  camera.position.z = 1000
+  scene = new THREE.Scene()
+  scene.add camera
 
-    renderer = new THREE.CanvasRenderer()
-    renderer.setSize window.innerWidth, window.innerHeight
-    document.body.appendChild renderer.domElement
-
-    makePaticles()
-
-    do update = ->
-      updateParticles()
-      renderer.render scene, camera
-      requestAnimationFrame update
-      console.log "update"
-
-  makePaticles = ->
-    [-w..w].forEach (x) ->
-      [-h..h].forEach (y) ->
-        material = new THREE.ParticleCanvasMaterial color: 0x000000, program: particleRender
-        particle = new THREE.Particle material
-
-        particle.position.x = x*2
-        particle.position.y = y*2
-        particle.position.z = 800
-
-        world[p x,y] =
-          x: x
-          y: y
-          particle: particle
-          life: coin()
-
-        scene.add particle
-        particles.push particle
+  renderer = new THREE.CanvasRenderer()
+  renderer.setSize window.innerWidth, window.innerHeight
+  document.body.appendChild renderer.domElement
 
   particleRender = (context) ->
     context.beginPath()
     context.arc 0,0,1,0,(Math.PI * 2), true
     context.fill()
+
+  [-w..w].forEach (x) ->
+    [-h..h].forEach (y) ->
+      material = new THREE.ParticleCanvasMaterial color: 0x000000, program: particleRender
+      particle = new THREE.Particle material
+
+      particle.position.x = x*2
+      particle.position.y = y*2
+      particle.position.z = 850
+
+      world[p x,y] = {x, y, particle, life: coin()}
+      scene.add particle
 
   updateParticles = ->
     for key, value of world
@@ -86,4 +62,8 @@ window.onload = ->
     for key, value of world
       value.life = value.nextLife
 
-  do init
+
+  do update = ->
+    updateParticles()
+    renderer.render scene, camera
+    requestAnimationFrame update
