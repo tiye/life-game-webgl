@@ -13,8 +13,6 @@ But I dont't much about OOP. So I wrote my own version.
 
 [prev]: http://willbailey.name/conway/docs/conway.html
 
-There might be something wrong with my rules. The actions looks strange.
-
 ## in Chinese
 
 学着 WebGL 的粒子系统写了一遍, 运行起来速度不太理想, 比 2d canvas 是好一些  
