@@ -4,7 +4,7 @@ var camera, coin, h, mouseX, mouseY, p, particles, renderer, scene, w, world;
 coin = function() {
   var a;
   a = Math.random();
-  return a > 0.95;
+  return a > 0.7;
 };
 
 world = {};
@@ -25,9 +25,9 @@ p = function(x, y) {
   return "" + x + "&" + y;
 };
 
-w = 70;
+w = 50;
 
-h = 40;
+h = 50;
 
 window.onload = function() {
   var init, makePaticles, particleRender, updateParticles;
@@ -44,7 +44,8 @@ window.onload = function() {
     return (update = function() {
       updateParticles();
       renderer.render(scene, camera);
-      return requestAnimationFrame(update);
+      requestAnimationFrame(update);
+      return console.log("update");
     })();
   };
   makePaticles = function() {
@@ -70,10 +71,8 @@ window.onload = function() {
         particle.position.y = y * 2;
         particle.position.z = 800;
         world[p(x, y)] = {
-          position: {
-            x: x,
-            y: y
-          },
+          x: x,
+          y: y,
           particle: particle,
           life: coin()
         };
@@ -88,46 +87,42 @@ window.onload = function() {
     return context.fill();
   };
   updateParticles = function() {
-    var a, b, count, key, me, point, value, x, y, _i, _j, _ref, _ref1, _ref2, _ref3, _results;
-    _results = [];
+    var a, b, count, key, me, value, x, y, _i, _j, _ref, _ref1, _ref2, _ref3, _results;
     for (key in world) {
       value = world[key];
       count = 0;
-      x = value.position.x;
-      y = value.position.y;
+      x = value.x;
+      y = value.y;
       for (a = _i = _ref = x - 1, _ref1 = x + 1; _ref <= _ref1 ? _i <= _ref1 : _i >= _ref1; a = _ref <= _ref1 ? ++_i : --_i) {
-        if (count > 3) {
-          break;
-        }
         for (b = _j = _ref2 = y - 1, _ref3 = y + 1; _ref2 <= _ref3 ? _j <= _ref3 : _j >= _ref3; b = _ref2 <= _ref3 ? ++_j : --_j) {
-          me = world[p(a, b)];
-          if (!(x === 0 && y === 0)) {
+          if (!((a === x) && (b === y))) {
+            me = world[p(a, b)];
             if (me != null) {
               if (me.life) {
                 count += 1;
               }
+            } else {
+              count += 1;
             }
           }
         }
       }
-      point = world[key];
-      if (count === 3) {
-        if (!point.life) {
-          point.life = true;
-          _results.push(point.particle.material.color.r = 0.4);
-        } else {
-          _results.push(void 0);
-        }
-      } else if (count !== 2) {
-        if (point.life) {
-          point.life = false;
-          _results.push(point.particle.material.color.r = 0);
-        } else {
-          _results.push(void 0);
+      if (count === 3 && (!value.life)) {
+        value.nextLife = true;
+        value.particle.material.color.r = 0.4;
+      } else if ((count < 2) || (count > 3)) {
+        if (value.life) {
+          value.nextLife = false;
+          value.particle.material.color.r = 0;
         }
       } else {
-        _results.push(void 0);
+        value.nextLife = value.life;
       }
+    }
+    _results = [];
+    for (key in world) {
+      value = world[key];
+      _results.push(value.life = value.nextLife);
     }
     return _results;
   };

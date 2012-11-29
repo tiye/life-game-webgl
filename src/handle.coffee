@@ -1,7 +1,7 @@
 
 coin = ->
   a = Math.random()
-  a > 0.95
+  a > 0.7
 
 world = {}
 
@@ -13,8 +13,8 @@ mouseX = 0
 mouseY = 0
 
 p = (x, y) -> "#{x}&#{y}"
-w = 70
-h = 40
+w = 50
+h = 50
 window.onload = ->
 
   init = ->
@@ -33,6 +33,7 @@ window.onload = ->
       updateParticles()
       renderer.render scene, camera
       requestAnimationFrame update
+      console.log "update"
 
   makePaticles = ->
     [-w..w].forEach (x) ->
@@ -45,9 +46,8 @@ window.onload = ->
         particle.position.z = 800
 
         world[p x,y] =
-          position:
-            x: x
-            y: y
+          x: x
+          y: y
           particle: particle
           life: coin()
 
@@ -62,24 +62,28 @@ window.onload = ->
   updateParticles = ->
     for key, value of world
       count = 0
-      x = value.position.x
-      y = value.position.y
+      x = value.x
+      y = value.y
       for a in [(x-1)..(x+1)]
-        if count > 3 then break
         for b in [(y-1)..(y+1)]
-          me = world[p a,b]
-          unless x is 0 and y is 0
+          unless (a is x) and (b is y)
+            me = world[p a,b]
             if me?
               if me.life
                 count += 1
-      point = world[key]
-      if count in [3]
-        unless point.life
-          point.life = yes
-          point.particle.material.color.r = 0.4
-      else unless count is 2
-        if point.life
-          point.life = no
-          point.particle.material.color.r = 0
+            else
+              count += 1
+      if count is 3 and (not value.life)
+        value.nextLife = yes
+        value.particle.material.color.r = 0.4
+      else if (count < 2) or (count > 3)
+        if value.life
+          value.nextLife = no
+          value.particle.material.color.r = 0
+      else
+        value.nextLife = value.life
+
+    for key, value of world
+      value.life = value.nextLife
 
   do init
