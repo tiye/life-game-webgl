@@ -1,16 +1,17 @@
 
-coin = -> Math.random() > 0.85
 p = (x, y) -> "#{x}&#{y}"
 
 world = {}
 
-w = 50
-h = 50
+w = 30
+h = 30
+t = 0
+l = 100
 
 window.onload = ->
 
   camera = new THREE.PerspectiveCamera 80, window.innerWidth/window.innerHeight, 1, 4000
-  camera.position.z = 1000
+  camera.position.z = l
   scene = new THREE.Scene()
   scene.add camera
 
@@ -25,15 +26,23 @@ window.onload = ->
 
   [-w..w].forEach (x) ->
     [-h..h].forEach (y) ->
-      material = new THREE.ParticleCanvasMaterial color: 0x000000, program: particleRender
+      material = new THREE.ParticleCanvasMaterial color: 0x440000, program: particleRender
       particle = new THREE.Particle material
 
       particle.position.x = x*2
       particle.position.y = y*2
-      particle.position.z = 850
+      particle.position.z = 0
 
-      world[p x,y] = {x, y, particle, life: coin()}
+      world[p x,y] = {x, y, particle, life: (Math.random() > 0.85)}
       scene.add particle
+
+  wake = (value) ->
+    value.nextLife = yes
+    value.particle.material.color.r = 1
+
+  kill = (value) ->
+    value.nextLife = no
+    value.particle.material.color.r = 0.3
 
   updateParticles = ->
     for key, value of world
@@ -50,20 +59,24 @@ window.onload = ->
             else
               count += 1
       if count is 3 and (not value.life)
-        value.nextLife = yes
-        value.particle.material.color.r = 0.4
+        wake value
       else if (count < 2) or (count > 3)
         if value.life
-          value.nextLife = no
-          value.particle.material.color.r = 0
+          kill value
+        else if Math.random() > 0.999
+          wake value
       else
         value.nextLife = value.life
 
     for key, value of world
       value.life = value.nextLife
 
-
   do update = ->
     updateParticles()
+    scene.rotation.x += 1
+    camera.position.x = (Math.sin t) * l
+    camera.position.z = (Math.cos t) * l
+    t += 0.03
+    camera.lookAt scene.position
     renderer.render scene, camera
     requestAnimationFrame update

@@ -11,9 +11,13 @@ View demo with Chrome by visiting: http://jiyinyiyong.github.com/life-game-webgl
 Previously there's [one CoffeeScript Version you can see it here][prev].  
 But I dont't much about OOP. So I wrote my own version.  
 
+And use 3D.  
+
 [prev]: http://willbailey.name/conway/docs/conway.html
 
 ## in Chinese
 
 学着 WebGL 的粒子系统写了一遍, 运行起来速度不太理想, 比 2d canvas 是好一些  
 按上边说的, 自己写的原因是看不懂面向对象的写法, 性能似乎要比 OOP 的版本差  
+
+还有 3D 效果
