@@ -116,7 +116,7 @@ window.onload = function() {
     dx = event.clientX - (width / 2);
     dy = event.clientY - (height / 2);
     camera.position.x = (Math.sin(dx / 1000)) * l;
-    camera.position.y = (Math.sin(dy / 1000)) * l;
+    camera.position.y = -(Math.sin(dy / 1000)) * l;
     return camera.lookAt(scene.position);
   })(event);
 };
