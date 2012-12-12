@@ -5,18 +5,20 @@ world = {}
 
 w = 30
 h = 30
-t = 0
 l = 100
 
 window.onload = ->
 
-  camera = new THREE.PerspectiveCamera 80, window.innerWidth/window.innerHeight, 1, 4000
+  width = window.innerWidth
+  height = window.innerHeight
+
+  camera = new THREE.PerspectiveCamera 80, width/height, 1, 4000
   camera.position.z = l
   scene = new THREE.Scene()
   scene.add camera
 
   renderer = new THREE.CanvasRenderer()
-  renderer.setSize window.innerWidth, window.innerHeight
+  renderer.setSize width, height
   document.body.appendChild renderer.domElement
 
   particleRender = (context) ->
@@ -42,7 +44,7 @@ window.onload = ->
 
   kill = (value) ->
     value.nextLife = no
-    value.particle.material.color.r = 0.3
+    value.particle.material.color.r = 0.25
 
   updateParticles = ->
     for key, value of world
@@ -73,10 +75,12 @@ window.onload = ->
 
   do update = ->
     updateParticles()
-    scene.rotation.x += 1
-    camera.position.x = (Math.sin t) * l
-    camera.position.z = (Math.cos t) * l
-    t += 0.03
-    camera.lookAt scene.position
     renderer.render scene, camera
     requestAnimationFrame update
+
+  do renderer.domElement.onmousemove = (event) ->
+    dx = event.clientX - (width / 2)
+    dy = event.clientY - (height / 2)
+    camera.position.x = (Math.sin dx/1000) * l
+    camera.position.y = (Math.sin dy/1000) * l
+    camera.lookAt scene.position
