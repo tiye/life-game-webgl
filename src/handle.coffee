@@ -65,7 +65,7 @@ window.onload = ->
       else if (count < 2) or (count > 3)
         if value.life
           kill value
-        else if Math.random() > 0.999
+        else if Math.random() > 0.9999
           wake value
       else
         value.nextLife = value.life
@@ -78,7 +78,7 @@ window.onload = ->
     renderer.render scene, camera
     requestAnimationFrame update
 
-  do renderer.domElement.onmousemove = (event) ->
+  renderer.domElement.onmousemove = (event) ->
     dx = event.clientX - (width / 2)
     dy = event.clientY - (height / 2)
     camera.position.x = (Math.sin dx/1000) * l

@@ -92,7 +92,7 @@ window.onload = function() {
       } else if ((count < 2) || (count > 3)) {
         if (value.life) {
           kill(value);
-        } else if (Math.random() > 0.999) {
+        } else if (Math.random() > 0.9999) {
           wake(value);
         }
       } else {
@@ -111,12 +111,12 @@ window.onload = function() {
     renderer.render(scene, camera);
     return requestAnimationFrame(update);
   })();
-  return (renderer.domElement.onmousemove = function(event) {
+  return renderer.domElement.onmousemove = function(event) {
     var dx, dy;
     dx = event.clientX - (width / 2);
     dy = event.clientY - (height / 2);
     camera.position.x = (Math.sin(dx / 1000)) * l;
     camera.position.y = -(Math.sin(dy / 1000)) * l;
     return camera.lookAt(scene.position);
-  })(event);
+  };
 };
