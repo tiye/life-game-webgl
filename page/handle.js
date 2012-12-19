@@ -92,7 +92,7 @@ window.onload = function() {
       } else if ((count < 2) || (count > 3)) {
         if (value.life) {
           kill(value);
-        } else if (Math.random() > 0.9999) {
+        } else if (Math.random() > 0.9996) {
           wake(value);
         }
       } else {

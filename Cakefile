@@ -2,22 +2,20 @@
 {print} = require "util"
 {spawn} = require "child_process"
 
-echo = (child, callback) ->
-  child.stderr.on "data", (data) -> process.stderr.write data.toString()
-  child.stdout.on "data", (data) -> print data.toString()
-  child.on "exit", (code) -> callback?() if code is 0
+echo = (child) ->
+  child.stderr.pipe process.stderr
+  child.stdout.pipe process.stdout
 
-make = (str) -> str.split " "
-
-queue = [
-  "jade -O #{__dirname}/page/ -wP #{__dirname}/src/index.jade"
-  "coffee -o #{__dirname}/page/ -wbc #{__dirname}/src/handle.coffee"
-  "stylus -o #{__dirname}/page/ -w #{__dirname}/src/page.styl"
-  "doodle #{__dirname}/page/"
-]
-
+d = __dirname
 split = (str) -> str.split " "
 
-task "dev", "watch and convert files", (callback) ->
+queue = [
+  "jade -O #{d}/page/ -wP #{d}/src/index.jade"
+  "coffee -o #{d}/page/ -wbc #{d}/src/handle.coffee"
+  "stylus -o #{d}/page/ -w #{d}/src/page.styl"
+  "doodle #{d}/page/"
+]
+
+task "dev", "watch and convert files", ->
   queue.map(split).forEach (array) ->
-    echo (spawn array[0], array[1..]), callback
+    echo (spawn array[0], array[1..])
